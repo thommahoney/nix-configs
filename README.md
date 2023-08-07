@@ -25,10 +25,10 @@ git clone git@github.com:thommahoney/nix-configs.git ~/.config/nix-configs
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 ```
 
-8. Install `nix-darwin`:
+8. Install [`nix-darwin`](https://github.com/LnL7/nix-darwin):
 
 ```shell
-git clone git@github.com:thommahoney/nix-configs.git ~/.config/nix-configs
+nix run nix-darwin -- switch --flake ~/.config/nix-configs
 ```
 
 9. Iterate on config and apply it with:
