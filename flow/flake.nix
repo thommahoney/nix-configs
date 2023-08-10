@@ -18,9 +18,9 @@
         # pkgs.starship
         pkgs.fzf
         pkgs.go
-        pkgs.inconsolata-nerdfont
         pkgs.jq
         pkgs.mas
+        (pkgs.nerdfonts.override { fonts = [ "Meslo" ]; })
         pkgs.rustup
         pkgs.starship
         pkgs.vim
@@ -29,8 +29,8 @@
         pkgs.zoxide
       ];
 
-      # TODO: configure iterm with inconsoloata nerdfont
-      #       Installed into macOS using `open /nix/store/nqwq2p65f38b5cy1mxak4bsk8zqxcfy4-nerdfonts-3.0.2/share/fonts/truetype/NerdFonts/InconsolataNerdFontMono-Regular.ttf`
+      # TODO: configure iterm with Meslo nerdfont
+      #       Installed into macOS using `open /nix/store/qqg5b6vhh2hvl8km98l7d579c0si0djg-nerdfonts-3.0.2/share/fonts/truetype/NerdFonts/MesloLGSNerdFont-Regular.ttf`
 
       # Required by many of the systemPackages
       # nixpkgs.config.allowUnfree = true;
