@@ -28,11 +28,11 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 8. Install [`nix-darwin`](https://github.com/LnL7/nix-darwin):
 
 ```shell
-nix run nix-darwin -- switch --flake ~/.config/nix-configs
+nix run nix-darwin -- switch --flake ~/.config/nix-configs/$name
 ```
 
 9. Iterate on config and apply it with:
 
 ```shell
-darwin-rebuild switch --flake ~/.config/nix-configs
+darwin-rebuild switch --flake ~/.config/nix-configs/$name
 ```

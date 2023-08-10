@@ -13,8 +13,24 @@
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages = [
+        # pkgs.atuin
+        # pkgs.bat
+        # pkgs.starship
+        pkgs.fzf
+        pkgs.go
+        pkgs.jq
+        pkgs.mas
+        (pkgs.nerdfonts.override { fonts = [ "Meslo" ]; })
+        pkgs.rustup
+        pkgs.starship
         pkgs.vim
+        pkgs.wget
+        pkgs.yq
+        pkgs.zoxide
       ];
+
+      # TODO: configure iterm with Meslo nerdfont
+      #       Installed into macOS using `open /nix/store/qqg5b6vhh2hvl8km98l7d579c0si0djg-nerdfonts-3.0.2/share/fonts/truetype/NerdFonts/MesloLGSNerdFont-Regular.ttf`
 
       # Auto upgrade nix package and the daemon service.
       services.nix-daemon.enable = true;
@@ -33,59 +49,129 @@
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
 
-      system.defaults = {
-        dock = {
-          appswitcher-all-displays = true;
-          autohide = true;
-          show-recents = false;
+      system = {
+        defaults = {
+          CustomUserPreferences = {
+            "com.microsoft.VSCode" = { "ApplePressAndHoldEnabled" = false; };
+          };
+          dock = {
+            appswitcher-all-displays = true;
+            autohide = true;
+            show-recents = false;
 
-          # hot corners
-          # BL: Application Windows
-          # BR: Desktop
-          # TL: Mission Control
-          # TR: Put Display to Sleep
-          wvous-bl-corner = 3;
-          wvous-br-corner = 4;
-          wvous-tl-corner = 2;
-          wvous-tr-corner = 10;
+            # hot corners
+            # BL: Application Windows
+            # BR: Desktop
+            # TL: Mission Control
+            # TR: Put Display to Sleep
+            wvous-bl-corner = 3;
+            wvous-br-corner = 4;
+            wvous-tl-corner = 2;
+            wvous-tr-corner = 10;
+          };
+
+          finder = {
+            AppleShowAllExtensions = true;
+            AppleShowAllFiles = true;
+            ShowPathbar = true;
+            FXPreferredViewStyle = "Nlsv";
+          };
+
+          menuExtraClock.ShowSeconds = true;
+ 
+          NSGlobalDomain = {
+            AppleInterfaceStyle = "Dark";
+            InitialKeyRepeat = 15;
+            KeyRepeat = 2;
+            AppleKeyboardUIMode = 3;
+            "com.apple.mouse.tapBehavior" = 1;
+            "com.apple.trackpad.scaling" = 2.5;
+            AppleShowAllExtensions = true;
+            AppleShowAllFiles = true;
+            "com.apple.sound.beep.feedback" = 1;
+          };
+
+          trackpad = {
+            Clicking = true;
+          };
         };
 
-        finder = {
-          AppleShowAllExtensions = true;
-          AppleShowAllFiles = true;
-          ShowPathbar = true;
-          FXPreferredViewStyle = "Nlsv";
+        keyboard = {
+          enableKeyMapping = true;
+          remapCapsLockToEscape = true;
         };
-
-        trackpad = {
-          Clicking = true;
-        };
-
-        menuExtraClock.ShowSeconds = true;
       };
 
-      system.keyboard = {
-        enableKeyMapping = true;
-        remapCapsLockToEscape = true;
-      };
 
       # Create /etc/zshrc that loads the nix-darwin environment.
       programs.zsh = {
         enable = true;
 
+        # set up /etc/zprofile
         # https://daiderd.com/nix-darwin/manual/index.html#opt-programs.zsh.loginShellInit
         loginShellInit = ''
           eval "$(/opt/homebrew/bin/brew shellenv)"
         '';
+
+        # set up /etc/zshrc
+        # https://daiderd.com/nix-darwin/manual/index.html#opt-programs.zsh.interactiveShellInit
+        interactiveShellInit = ''
+          eval "$(zoxide init zsh)"
+        '';
+
+        # configure the prompt to use starship
+        # https://daiderd.com/nix-darwin/manual/index.html#opt-programs.zsh.promptInit
+        promptInit = ''
+          eval "$(starship init zsh)"
+        '';
+        };
+
+      # set shell aliases
+      environment.shellAliases = {
+        gco = "git checkout";
+        grs = "git restore --staged";
+        gs = "git status";
+        gsl = "git log --oneline --graph --decorate";
+        ll = "ls -lah";
       };
 
       homebrew = {
         enable = true;
+        global.autoUpdate = false;
+        onActivation.cleanup = "zap";
+
+        brews = [
+          "md5sha1sum"
+        ];
 
         casks = [
+          "1password"          # 1Password wants to be installed /Applications (not /Applicatons/Nix Apps)
+          "1password-cli"      # because 1Password is installed this way
+          "alfred"             # not available in nixpkgs
+          # "backblaze"          # not available in nixpkgs
+          # "choosy"             # not available in nixpkgs # TODO: figure out how to set default browser (to Choosy)
+          # "clocker"            # not available in nixpkgs
+          "dropbox"            # not available in nixpkgs
+          "firefox"            # not available in nixpkgs
+          "google-chrome"      # not available in nixpkgs
+          # "gimp"               # failed to install via nixpkgs
+          "iterm2"             # TODO: install with nixpkgs
+          # "rewind"             # not available in nixpkgs
+          "signal"             # not available in nixpkgs
+          "spotify"            # TODO: install with nixpkgs
+          "tailscale"          # TODO: couldn't find app after install with nixpkgs
+          "telegram"           # not available in nixpkgs
+          "visual-studio-code" # TODO: install with nixpkgs
+          "whatsapp"           # not available in nixpkgs
           "zoom"
-          "spotify"
         ];
+
+        masApps = {
+          "Divvy" = 413857545; # valid license through MAS
+        };
+
+        # TODO: configure divvy with:
+        #    /Library/Preferences/com.mizage.Divvy.plist
       };
 
       # found in a blog post, unsure if it works.
