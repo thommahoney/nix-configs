@@ -57,6 +57,7 @@
          "alfred"             # not available in nixpkgs
          "authy"              # not available in nixpkgs
          "backblaze"          # not available in nixpkgs
+         "boop"
          "choosy"             # not available in nixpkgs # TODO: figure out how to set default browser (to Choosy)
          "clocker"            # not available in nixpkgs
          "dropbox"            # not available in nixpkgs
