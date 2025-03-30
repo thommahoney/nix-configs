@@ -1,3 +1,27 @@
+# "petite" MacBook Air
+
+{ inputs, globals, overlays, ... }:
+
+inputs.darwin.lib.darwinSystem {
+  system = "x86_64-darwin";
+  specialArgs = { };
+  modules = [
+    # ../../modules/common
+    ../../_modules/darwin
+    (globals // rec {
+      user = "thom";
+      gitName = "Thom Mahoney";
+      gitEmail = "mahoneyt@gmail.com";
+    })
+  ];
+}
+
+
+
+
+
+
+
 {
   description = "petite macOS system flake";
 
@@ -148,6 +172,8 @@
           "1password"          # 1Password wants to be installed /Applications (not /Applicatons/Nix Apps)
           "1password-cli"      # because 1Password is installed this way
           "alfred"             # not available in nixpkgs
+          "android-commandlinetools"
+          "android-studio"
           # "backblaze"          # not available in nixpkgs
           # "choosy"             # not available in nixpkgs # TODO: figure out how to set default browser (to Choosy)
           # "clocker"            # not available in nixpkgs
@@ -161,6 +187,8 @@
           "spotify"            # TODO: install with nixpkgs
           "tailscale"          # TODO: couldn't find app after install with nixpkgs
           "telegram"           # not available in nixpkgs
+          "transmission"
+          "temurin"            # required for android-commandlinetools
           "visual-studio-code" # TODO: install with nixpkgs
           "whatsapp"           # not available in nixpkgs
           "zoom"
